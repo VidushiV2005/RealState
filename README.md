@@ -177,10 +177,6 @@ Real_estate_Enterprise/
 - **Real-time Updates**: Redux state management for dynamic content
 - **Accessibility**: ARIA-compliant components with Radix UI
 
-## 🚀 Deployment
-
-This project is deployed on **Vercel** for optimal performance and scalability.
-
 ### Frontend Deployment (Vercel)
 The Next.js frontend is automatically deployed on Vercel:
 
@@ -238,32 +234,6 @@ Create a `vercel.json` file in the root directory for full-stack deployment:
 }
 ```
 
-## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
-## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [Next.js](https://nextjs.org/) for the amazing React framework
-- [Prisma](https://www.prisma.io/) for the excellent database ORM
-- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
-- [Radix UI](https://www.radix-ui.com/) for accessible component primitives
-- [Mapbox](https://www.mapbox.com/) for mapping services
-
-## 📞 Support
-
-For support and questions, please open an issue in the GitHub repository or contact the development team.
-
----
-
-**Built with ❤️ using modern web technologies**
-
-**Built by Tripti Garg**
