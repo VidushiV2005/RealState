@@ -38,22 +38,66 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   if (!authUser?.userRole) return null;
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen w-full bg-white">
-        <Navbar />
-        <div>
-          <main className="flex">
-            <Sidebar userType={authUser.userRole.toLowerCase()} />
-            <div
-              className="flex-grow transition-all duration-300"
-              style={{ paddingTop: `${NAVBAR_HEIGHT}` }}
-            >
-              {children}
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap');
+
+        .dash-root {
+          min-height: 100vh;
+          width: 100%;
+          background: #f7f5f1;
+          font-family: 'Jost', sans-serif;
+        }
+
+        .dash-body {
+          display: flex;
+        }
+
+        /* Sidebar gets a clean white card feel */
+        .dash-sidebar-wrap {
+          flex-shrink: 0;
+          background: #ffffff;
+          border-right: 1px solid #e8e3db;
+        }
+
+        /* Main content area */
+        .dash-main {
+          flex: 1;
+          min-width: 0;
+          transition: all 0.3s ease;
+          background: #f7f5f1;
+        }
+
+        /* Subtle top rule below navbar */
+        .dash-content-inner {
+          border-top: 1px solid rgba(122,158,126,0.12);
+        }
+      `}</style>
+
+      <SidebarProvider>
+        <div className="dash-root">
+          <Navbar />
+          <div className="dash-body">
+
+            {/* Sidebar */}
+            <div className="dash-sidebar-wrap">
+              <Sidebar userType={authUser.userRole.toLowerCase()} />
             </div>
-          </main>
+
+            {/* Page content */}
+            <main
+              className="dash-main"
+              style={{ paddingTop: `${NAVBAR_HEIGHT}px` }}
+            >
+              <div className="dash-content-inner">
+                {children}
+              </div>
+            </main>
+
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </>
   );
 };
 

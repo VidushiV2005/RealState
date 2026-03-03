@@ -30,206 +30,560 @@ import {
 import { useParams } from "next/navigation";
 import React from "react";
 
-const PaymentMethod = () => {
-  return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 mt-10 md:mt-0 flex-1">
-      <h2 className="text-2xl font-bold mb-4">Payment method</h2>
-      <p className="mb-4">Change how you pay for your plan.</p>
-      <div className="border rounded-lg p-6">
-        <div>
-          <div className="flex gap-10">
-            <div className="w-36 h-20 bg-blue-600 flex items-center justify-center rounded-md">
-              <span className="text-white text-2xl font-bold">VISA</span>
-            </div>
-            <div className="flex flex-col justify-between">
-              <div>
-                <div className="flex items-start gap-5">
-                  <h3 className="text-lg font-semibold">Visa ending in 2024</h3>
-                  <span className="text-sm font-medium border border-black text-black px-3 py-1 rounded-full">
-                    Default
-                  </span>
-                </div>
-                <div className="text-sm text-gray-500 flex items-center">
-                  <CreditCard className="w-4 h-4 mr-1" />
-                  <span>Expiry • 26/06/2024</span>
-                </div>
-              </div>
-              <div className="text-sm text-gray-500 flex items-center">
-                <Mail className="w-4 h-4 mr-1" />
-                <span>billing@baseclub.com</span>
-              </div>
-            </div>
-          </div>
+/* ─────────────────────────────────────────────────────────────
+   STYLES
+───────────────────────────────────────────────────────────── */
+const Styles = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap');
 
-          <hr className="my-4" />
-          <div className="flex justify-end">
-            <button className="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center hover:bg-black/70 hover:text-white">
-              <Edit className="w-5 h-5 mr-2" />
-              <span>Edit</span>
-            </button>
-          </div>
+    .res-root {
+      padding: 88px 48px 60px 80px;
+      font-family: 'Jost', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Section label ── */
+    .res-eyebrow {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #7A9E7E;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .res-eyebrow-line {
+      display: inline-block;
+      width: 20px;
+      height: 1.5px;
+      background: #7A9E7E;
+      opacity: 0.6;
+    }
+    .res-page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #141f14;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .res-page-sub {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: #7a7a74;
+      margin-bottom: 32px;
+    }
+    .res-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, #e0dbd3, transparent);
+      margin-bottom: 28px;
+    }
+
+    /* ── Top row ── */
+    .res-top-row {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      align-items: stretch;
+    }
+
+    /* ── Residence card ── */
+    .res-card {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #e5e1da;
+      border-radius: 12px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .res-card-top {
+      display: flex;
+      gap: 20px;
+    }
+
+    .res-img-placeholder {
+      width: 180px;
+      height: 120px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #d4e4d5, #eef4ee);
+      flex-shrink: 0;
+      border: 1px solid #c4d9c5;
+    }
+
+    .res-card-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+    }
+
+    .res-lease-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0faf0;
+      border: 1px solid #b4d9b6;
+      color: #2d6e32;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      width: fit-content;
+    }
+    .res-lease-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #4a9e50;
+    }
+
+    .res-prop-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #141f14;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .res-location {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.82rem;
+      color: #7a7a74;
+      font-weight: 300;
+      margin-bottom: 10px;
+    }
+
+    .res-rent {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #141f14;
+    }
+    .res-rent span {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: #a0a09a;
+    }
+
+    /* lease dates row */
+    .res-dates-row {
+      display: flex;
+      gap: 0;
+      border: 1px solid #e5e1da;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .res-date-cell {
+      flex: 1;
+      padding: 12px 16px;
+      border-right: 1px solid #e5e1da;
+    }
+    .res-date-cell:last-child { border-right: none; }
+    .res-date-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #a0a09a;
+      margin-bottom: 4px;
+    }
+    .res-date-val {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #1a1a18;
+    }
+
+    /* action buttons */
+    .res-btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .res-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border-radius: 5px;
+      border: 1px solid #cdc8c0;
+      background: #ffffff;
+      color: #3d3d3a;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .res-btn:hover {
+      background: #1a1a18;
+      border-color: #1a1a18;
+      color: #ffffff;
+    }
+
+    /* ── Payment method card ── */
+    .res-payment-card {
+      width: 320px;
+      flex-shrink: 0;
+      background: #ffffff;
+      border: 1px solid #e5e1da;
+      border-radius: 12px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .res-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #141f14;
+      margin-bottom: 2px;
+    }
+    .res-card-sub {
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: #a0a09a;
+    }
+
+    .res-visa-wrap {
+      border: 1px solid #e5e1da;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .res-visa-chip {
+      width: 54px;
+      height: 36px;
+      background: linear-gradient(135deg, #1a3a8f, #2a5acc);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .res-visa-chip span {
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .res-visa-info { flex: 1; }
+    .res-visa-name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .res-visa-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #1a1a18;
+    }
+    .res-visa-default {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #7A9E7E;
+      background: #eef4ee;
+      border: 1px solid #c4d9c5;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .res-visa-detail {
+      font-size: 0.75rem;
+      color: #a0a09a;
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    /* ── Billing history ── */
+    .res-billing {
+      background: #ffffff;
+      border: 1px solid #e5e1da;
+      border-radius: 12px;
+      padding: 28px;
+    }
+
+    .res-billing-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 16px;
+    }
+
+    .res-table-head {
+      font-size: 0.65rem !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.15em !important;
+      text-transform: uppercase !important;
+      color: #a0a09a !important;
+      padding: 12px 16px !important;
+      border-bottom: 1px solid #e5e1da !important;
+    }
+
+    .res-table-cell {
+      font-size: 0.82rem !important;
+      color: #3d3d3a !important;
+      font-weight: 400 !important;
+      padding: 14px 16px !important;
+      border-bottom: 1px solid #f0ece6 !important;
+    }
+
+    .res-status-paid {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #f0faf0;
+      border: 1px solid #b4d9b6;
+      color: #2d6e32;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .res-status-pending {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #fefce8;
+      border: 1px solid #e0d060;
+      color: #7a5e00;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .res-download-sm {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 5px;
+      border: 1px solid #cdc8c0;
+      background: #ffffff;
+      color: #3d3d3a;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .res-download-sm:hover {
+      background: #1a1a18;
+      border-color: #1a1a18;
+      color: white;
+    }
+
+    @media (max-width: 900px) {
+      .res-root { padding: 80px 20px 40px; }
+      .res-top-row { flex-direction: column; }
+      .res-payment-card { width: 100%; }
+      .res-card-top { flex-direction: column; }
+      .res-img-placeholder { width: 100%; height: 160px; }
+    }
+  `}</style>
+);
+
+/* ─────────────────────────────────────────────────────────────
+   PAYMENT METHOD
+───────────────────────────────────────────────────────────── */
+const PaymentMethod = () => (
+  <div className="res-payment-card">
+    <div>
+      <p className="res-card-title">Payment Method</p>
+      <p className="res-card-sub">Change how you pay for your plan.</p>
+    </div>
+
+    <div className="res-visa-wrap">
+      <div className="res-visa-chip"><span>VISA</span></div>
+      <div className="res-visa-info">
+        <div className="res-visa-name-row">
+          <span className="res-visa-name">Visa ···· 2024</span>
+          <span className="res-visa-default">Default</span>
+        </div>
+        <div className="res-visa-detail">
+          <CreditCard style={{ width: "12px", height: "12px" }} />
+          Expiry 26/06/2024
+        </div>
+        <div className="res-visa-detail">
+          <Mail style={{ width: "12px", height: "12px" }} />
+          billing@baseclub.com
         </div>
       </div>
     </div>
-  );
-};
 
+    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      <button className="res-btn">
+        <Edit style={{ width: "14px", height: "14px" }} />
+        Edit
+      </button>
+    </div>
+  </div>
+);
+
+/* ─────────────────────────────────────────────────────────────
+   RESIDENCE CARD
+───────────────────────────────────────────────────────────── */
 const ResidenceCard = ({
   property,
   currentLease,
 }: {
   property: Property;
   currentLease: Lease;
-}) => {
-  return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 flex-1 flex flex-col justify-between">
-      <div className="flex gap-5">
-        <div className="w-64 h-32 object-cover bg-slate-500 rounded-xl"></div>
-
-        <div className="flex flex-col justify-between">
-          <div>
-            <div className="bg-green-500 w-fit text-white px-4 py-1 rounded-full text-sm font-semibold">
-              Active Leases
-            </div>
-
-            <h2 className="text-2xl font-bold my-2">{property.name}</h2>
-            <div className="flex items-center mb-2">
-              <MapPin className="w-5 h-5 mr-1" />
-              <span>
-                {property.location.city}, {property.location.country}
-              </span>
-            </div>
+}) => (
+  <div className="res-card">
+    <div className="res-card-top">
+      <div className="res-img-placeholder" />
+      <div className="res-card-info">
+        <div>
+          <div className="res-lease-badge">
+            <span className="res-lease-badge-dot" />
+            Active Lease
           </div>
-          <div className="text-xl font-bold">
-            ${currentLease.rent}{" "}
-            <span className="text-gray-500 text-sm font-normal">/ night</span>
+          <h2 className="res-prop-name">{property.name}</h2>
+          <div className="res-location">
+            <MapPin style={{ width: "13px", height: "13px" }} />
+            {property.location.city}, {property.location.country}
           </div>
         </div>
+        <div className="res-rent">
+          ${currentLease.rent}
+          <span> / night</span>
+        </div>
       </div>
+    </div>
+
+    <div className="res-dates-row">
+      {[
+        { label: "Start Date",    val: new Date(currentLease.startDate).toLocaleDateString() },
+        { label: "End Date",      val: new Date(currentLease.endDate).toLocaleDateString() },
+        { label: "Next Payment",  val: new Date(currentLease.endDate).toLocaleDateString() },
+      ].map(({ label, val }) => (
+        <div key={label} className="res-date-cell">
+          <div className="res-date-label">{label}</div>
+          <div className="res-date-val">{val}</div>
+        </div>
+      ))}
+    </div>
+
+    <div className="res-btn-row">
+      <button className="res-btn">
+        <User style={{ width: "14px", height: "14px" }} />
+        Manager
+      </button>
+      <button className="res-btn">
+        <Download style={{ width: "14px", height: "14px" }} />
+        Agreement
+      </button>
+    </div>
+  </div>
+);
+
+/* ─────────────────────────────────────────────────────────────
+   BILLING HISTORY
+───────────────────────────────────────────────────────────── */
+const BillingHistory = ({ payments }: { payments: Payment[] }) => (
+  <div className="res-billing">
+    <div className="res-billing-header">
       <div>
-        <hr className="my-4" />
-        <div className="flex justify-between items-center">
-          <div className="xl:flex">
-            <div className="text-gray-500 mr-2">Start Date: </div>
-            <div className="font-semibold">
-              {new Date(currentLease.startDate).toLocaleDateString()}
-            </div>
-          </div>
-          <div className="border-[0.5px] border-black h-4" />
-          <div className="xl:flex">
-            <div className="text-gray-500 mr-2">End Date: </div>
-            <div className="font-semibold">
-              {new Date(currentLease.endDate).toLocaleDateString()}
-            </div>
-          </div>
-          <div className="border-[0.5px] border-black h-4" />
-          <div className="xl:flex">
-            <div className="text-gray-500 mr-2">Next Payment: </div>
-            <div className="font-semibold">
-              {new Date(currentLease.endDate).toLocaleDateString()}
-            </div>
-          </div>
-        </div>
-        <hr className="my-4" />
+        <p className="res-card-title">Billing History</p>
+        <p className="res-card-sub">Download your previous receipts and usage details.</p>
       </div>
-      <div className="flex justify-end gap-2 w-full">
-        <button className="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center hover:bg-black/70 hover:text-white">
-          <User className="w-5 h-5 mr-2" />
-          Manager
-        </button>
-        <button className="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center hover:bg-black/70 hover:text-white">
-          <Download className="w-5 h-5 mr-2" />
-          Download Agreement
-        </button>
-      </div>
+      <button className="res-btn">
+        <Download style={{ width: "14px", height: "14px" }} />
+        Download All
+      </button>
     </div>
-  );
-};
 
-const BillingHistory = ({ payments }: { payments: Payment[] }) => {
-  return (
-    <div className="mt-8 bg-white rounded-xl shadow-md overflow-hidden p-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold mb-1">Billing History</h2>
-          <p className="text-sm text-gray-500">
-            Download your previous plan receipts and usage details.
-          </p>
-        </div>
-        <div>
-          <button className="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center hover:bg-black/70 hover:text-white">
-            <Download className="w-5 h-5 mr-2" />
-            <span>Download All</span>
-          </button>
-        </div>
-      </div>
-      <hr className="mt-4 mb-1" />
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Invoice</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Billing Date</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {payments.map((payment) => (
-              <TableRow key={payment.id} className="h-16">
-                <TableCell className="font-medium">
-                  <div className="flex items-center">
-                    <FileText className="w-4 h-4 mr-2" />
-                    Invoice #{payment.id} -{" "}
-                    {new Date(payment.paymentDate).toLocaleString("default", {
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-semibold border ${
-                      payment.paymentStatus === "Paid"
-                        ? "bg-green-100 text-green-800 border-green-300"
-                        : "bg-yellow-100 text-yellow-800 border-yellow-300"
-                    }`}
-                  >
-                    {payment.paymentStatus === "Paid" ? (
-                      <Check className="w-4 h-4 inline-block mr-1" />
-                    ) : null}
-                    {payment.paymentStatus}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  {new Date(payment.paymentDate).toLocaleDateString()}
-                </TableCell>
-                <TableCell>${payment.amountPaid.toFixed(2)}</TableCell>
-                <TableCell>
-                  <button className="border border-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center justify-center font-semibold hover:bg-black/70 hover:text-white">
-                    <ArrowDownToLineIcon className="w-4 h-4 mr-1" />
-                    Download
-                  </button>
-                </TableCell>
-              </TableRow>
+    <div style={{ borderTop: "1px solid #e5e1da" }}>
+      <Table>
+        <TableHeader>
+          <TableRow style={{ borderBottom: "1px solid #e5e1da" }}>
+            {["Invoice", "Status", "Billing Date", "Amount", "Action"].map(h => (
+              <TableHead key={h} className="res-table-head">{h}</TableHead>
             ))}
-          </TableBody>
-        </Table>
-      </div>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {payments.map((payment) => (
+            <TableRow key={payment.id} style={{ borderBottom: "1px solid #f0ece6" }}>
+              <TableCell className="res-table-cell">
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <FileText style={{ width: "14px", height: "14px", color: "#7A9E7E", flexShrink: 0 }} />
+                  Invoice #{payment.id} —{" "}
+                  {new Date(payment.paymentDate).toLocaleString("default", {
+                    month: "short", year: "numeric",
+                  })}
+                </div>
+              </TableCell>
+              <TableCell className="res-table-cell">
+                {payment.paymentStatus === "Paid" ? (
+                  <span className="res-status-paid">
+                    <Check style={{ width: "10px", height: "10px" }} />
+                    Paid
+                  </span>
+                ) : (
+                  <span className="res-status-pending">Pending</span>
+                )}
+              </TableCell>
+              <TableCell className="res-table-cell">
+                {new Date(payment.paymentDate).toLocaleDateString()}
+              </TableCell>
+              <TableCell className="res-table-cell" style={{ fontWeight: 500 }}>
+                ${payment.amountPaid.toFixed(2)}
+              </TableCell>
+              <TableCell className="res-table-cell">
+                <button className="res-download-sm">
+                  <ArrowDownToLineIcon style={{ width: "12px", height: "12px" }} />
+                  Download
+                </button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
-  );
-};
+  </div>
+);
 
+/* ─────────────────────────────────────────────────────────────
+   PAGE ROOT
+───────────────────────────────────────────────────────────── */
 const Residence = () => {
   const { id } = useParams();
   const { data: authUser } = useGetAuthUserQuery();
-  const {
-    data: property,
-    isLoading: propertyLoading,
-    error: propertyError,
-  } = useGetPropertyQuery(Number(id));
-
+  const { data: property, isLoading: propertyLoading, error: propertyError } =
+    useGetPropertyQuery(Number(id));
   const { data: leases, isLoading: leasesLoading } = useGetLeasesQuery(
     parseInt(authUser?.cognitoInfo?.userId || "0"),
     { skip: !authUser?.cognitoInfo?.userId }
@@ -242,22 +596,33 @@ const Residence = () => {
   if (propertyLoading || leasesLoading || paymentsLoading) return <Loading />;
   if (!property || propertyError) return <div>Error loading property</div>;
 
-  const currentLease = leases?.find(
-    (lease) => lease.propertyId === property.id
-  );
+  const currentLease = leases?.find((lease) => lease.propertyId === property.id);
 
   return (
-    <div className="dashboard-container pt-20 pl-16">
-      <div className="w-full mx-auto">
-        <div className="md:flex gap-10">
+    <>
+      <Styles />
+      <div className="res-root">
+        {/* Page header */}
+        <div className="res-eyebrow">
+          <span className="res-eyebrow-line" />
+          Tenant Dashboard
+        </div>
+        <h1 className="res-page-title">My Residence</h1>
+        <p className="res-page-sub">Manage your active lease, payment method, and billing history</p>
+        <div className="res-divider" />
+
+        {/* Top row: Residence + Payment */}
+        <div className="res-top-row">
           {currentLease && (
             <ResidenceCard property={property} currentLease={currentLease} />
           )}
           <PaymentMethod />
         </div>
+
+        {/* Billing history */}
         <BillingHistory payments={payments || []} />
       </div>
-    </div>
+    </>
   );
 };
 
